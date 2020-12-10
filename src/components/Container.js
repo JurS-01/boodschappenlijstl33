@@ -26,23 +26,23 @@ class Container extends React.Component {
         this.emptyCart = this.emptyCart.bind(this)
         this.addItem = this.addItem.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.addAmountToItem = this.addAmountToItem.bind(this)
+        // this.addAmountToItem = this.addAmountToItem.bind(this)
     }
 
-    addAmountToItem(clickedTitle) {
-        this.setState(() => {
-            const updatedItems = this.state.shoppingListItems.map(item => {
-                if (item.title === clickedTitle) {
-                    item.amount++
-                }
-                console.log(item);
-                return item
-            })
-            return {
-                shoppingListItems: updatedItems
-            }
-        })
-    }
+    // addAmountToItem(clickedTitle) {
+    //     this.setState(() => {
+    //         const updatedItems = this.state.shoppingListItems.map(item => {
+    //             if (item.title === clickedTitle) {
+    //                 item.amount++
+    //             }
+    //             console.log(item);
+    //             return item
+    //         })
+    //         return {
+    //             shoppingListItems: updatedItems
+    //         }
+    //     })
+    // }
 
 
 
@@ -52,13 +52,9 @@ class Container extends React.Component {
         const clickedTitle = event.target.getAttribute("value")
         const movedItem = this.state.groceryItems.find(item => item.title === clickedTitle)
         const updatedGroceryList = this.state.groceryItems.filter(item => item.title !== clickedTitle)
-        // const updatedShoppingList = [...this.state.shoppingListItems, this.state.groceryItems.find(item => item.title === clickedTitle)]
         let updatedShoppingList = this.state.shoppingListItems
         let indexInList = -1
-        updatedShoppingList.forEach((item, index) => {
-            if (item.title.toUpperCase().trim() === movedItem.title.toUpperCase().trim())
-                indexInList = index
-        })
+        indexInList = updatedShoppingList.findIndex(item => item.title.toUpperCase().trim() === movedItem.title.toUpperCase().trim())
 
         if (indexInList === -1) {
             updatedShoppingList = [...this.state.shoppingListItems, movedItem]
@@ -82,10 +78,11 @@ class Container extends React.Component {
         event.preventDefault()
         let updatedGroceryList = this.state.groceryItems;
         let plek = -1;
-        updatedGroceryList.forEach((item, index) => {
-            if (item.title.toUpperCase().trim() === this.state.newTitle.toUpperCase().trim())
-                plek = index;
-        });
+        // updatedGroceryList.forEach((item, index) => {
+        //     if (item.title.toUpperCase().trim() === this.state.newTitle.toUpperCase().trim())
+        //         plek = index;
+        // });
+        plek = updatedGroceryList.findIndex(item => item.title.toUpperCase().trim() === this.state.newTitle.toUpperCase().trim());
 
         if (plek === -1) {
             const updatedItem = {
