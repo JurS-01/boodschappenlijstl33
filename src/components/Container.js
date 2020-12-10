@@ -9,11 +9,11 @@ class Container extends React.Component {
         super();
         this.state = {
             groceryItems: [
-                { id: 1, title: "boerenkool" },
-                { id: 2, title: "vegetarische rookworst" },
-                { id: 3, title: "vegetarische spekjes" },
-                { id: 4, title: "aardappel" },
-                { id: 5, title: "rode ui" }
+                { id: 1, title: "boerenkool", amount: 1 },
+                { id: 2, title: "vegetarische rookworst", amount: 1 },
+                { id: 3, title: "vegetarische spekjes", amount: 1 },
+                { id: 4, title: "aardappel", amount: 1 },
+                { id: 5, title: "rode ui", amount: 1 }
             ],
             shoppingListItems: [
                 { id: 6, title: "wortels bio", amount: 3 },
@@ -28,7 +28,6 @@ class Container extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.addAmountToItem = this.addAmountToItem.bind(this)
     }
-
 
     addAmountToItem(clickedTitle) {
         this.setState(() => {
@@ -49,22 +48,25 @@ class Container extends React.Component {
 
 
     handleClickGroceryItem(event) {
+
+        const clickedTitle = event.target.getAttribute("value")
+        const movedItem = this.state.groceryItems.find(item => item.title === clickedTitle)
+        const updatedGroceryList = this.state.groceryItems.filter(item => item.title !== clickedTitle)
+        // const updatedShoppingList = [...this.state.shoppingListItems, this.state.groceryItems.find(item => item.title === clickedTitle)]
+        let updatedShoppingList = this.state.shoppingListItems
+        let indexInList = -1
+        updatedShoppingList.forEach((item, index) => {
+            if (item.title.toUpperCase().trim() === movedItem.title.toUpperCase().trim())
+                indexInList = index
+        })
+
+        if (indexInList === -1) {
+            updatedShoppingList = [...this.state.shoppingListItems, movedItem]
+        } else {
+            updatedShoppingList[indexInList].amount = updatedShoppingList[indexInList].amount + movedItem.amount
+        }
+
         this.setState(() => {
-            const clickedTitle = event.target.getAttribute("value")
-            const movedItem = this.state.groceryItems.find(item => item.title === clickedTitle)
-            const updatedGroceryList = this.state.groceryItems.filter(item => item.title !== clickedTitle)
-            // updatedShoppingList = [...updatedShoppingList, this.state.groceryItems.find(item => item.title === clickedTitle)]
-            let updatedShoppingList = ""
-            this.state.shoppingListItems.find(item => {  // Welke array method?
-                if (item.title !== clickedTitle) {
-                    movedItem.amount = 1
-                    console.log(movedItem);
-                    return updatedShoppingList = [...this.state.shoppingListItems, movedItem]
-                } else {
-                    console.log(item);
-                    return this.addAmountToItem(item)
-                }
-            })
             return {
                 groceryItems: updatedGroceryList,
                 shoppingListItems: updatedShoppingList
@@ -78,10 +80,27 @@ class Container extends React.Component {
 
     addItem(event) {
         event.preventDefault()
-        const updatedItem = { id: uuidv4(), title: this.state.newTitle }
-        const updatedGroceryList = [...this.state.groceryItems, updatedItem]
+        let updatedGroceryList = this.state.groceryItems;
+        let plek = -1;
+        updatedGroceryList.forEach((item, index) => {
+            if (item.title.toUpperCase().trim() === this.state.newTitle.toUpperCase().trim())
+                plek = index;
+        });
+
+        if (plek === -1) {
+            const updatedItem = {
+                id: uuidv4(),
+                title: this.state.newTitle,
+                amount: 1,
+            };
+            updatedGroceryList = [...this.state.groceryItems, updatedItem];
+        } else {
+            updatedGroceryList[plek].amount = updatedGroceryList[plek].amount + 1;
+        }
         this.setState({ groceryItems: updatedGroceryList });
     }
+
+
 
     emptyCart() {
         this.setState({ shoppingListItems: [] });

@@ -8,7 +8,6 @@ const AddItem = (props) => {
                     type="text"
                     name="newTitle"
                     placeholder="vul je boodschappen in"
-                    // value={props.items.newTitle}
                     onChange={props.handleChange}
                 />
                 <button type="submit">Voeg toe</button>

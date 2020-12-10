@@ -2,7 +2,6 @@ import React from 'react';
 import List from "./List";
 import AddItem from "./AddItem";
 
-
 const GroceryList = (props) => {
     return (
         <div className="listbox grocery">
